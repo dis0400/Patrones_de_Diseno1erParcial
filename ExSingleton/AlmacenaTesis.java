@@ -4,8 +4,6 @@ import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.print.attribute.standard.PrinterMakeAndModel;
-
 public class AlmacenaTesis{
 
     private static AlmacenaTesis instance;
@@ -23,8 +21,15 @@ public class AlmacenaTesis{
         }
         return instance;
     }
+    
 
-    private synchronized void registroTesis(Tesis tesis, Date date){
+    private synchronized static void multiThreadControl() {
+        if (instance == null){
+            instance = new AlmacenaTesis();
+        }
+    }
+
+    public synchronized void registroTesis( Tesis tesis, Date date){
         if (!registro.containsKey(tesis)){
 
             System.out.println("REGISTRO DE TESIS: "+ tesis.getDatosEst().getNombre()+ " FECHA: " +date);
@@ -38,7 +43,7 @@ public class AlmacenaTesis{
     public synchronized void verRegistr0(){
         System.out.println("REGISTRO");
         for (Map.Entry<Tesis, Date> entry: registro.entrySet()){
-            System.out.println("null");
+            System.out.println(entry.getKey().getDatosEst().getNombre()+ entry.getKey().getDatosEst().getCi()+ entry.getKey().getTitulo()+ entry.getKey().getMencion()+ entry.getValue());
         }
     }
 
